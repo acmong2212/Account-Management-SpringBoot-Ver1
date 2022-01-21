@@ -33,21 +33,28 @@ public class AccountController {
     @Autowired
     Repeat repeat;
 
-//    @GetMapping("")
-//    public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
-//        ModelAndView modelAndView = new ModelAndView("home");
-//        modelAndView.addObject("users", userService.findAllUser(PageRequest.of(page, 3)));
-//        modelAndView.addObject("roles", roleService.findAllRole());
-//        return modelAndView;
-//    }
-
     @GetMapping("")
-    public ModelAndView show() {
+    public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
         ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("users", userService.findAllUser());
+        modelAndView.addObject("users", userService.findAllUser(PageRequest.of(page, 3)));
         modelAndView.addObject("roles", roleService.findAllRole());
         return modelAndView;
     }
+
+    @GetMapping("/findByFullName")
+    public ModelAndView findByName(@RequestParam String findName, @RequestParam(defaultValue = "0") int page) {
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("users", userService.findAllByFullNameContaining(findName, PageRequest.of(page, 3)));
+        return modelAndView;
+    }
+
+//    @GetMapping("")
+//    public ModelAndView show() {
+//        ModelAndView modelAndView = new ModelAndView("home");
+//        modelAndView.addObject("users", userService.findAllUser());
+//        modelAndView.addObject("roles", roleService.findAllRole());
+//        return modelAndView;
+//    }
 
     @GetMapping("/create")
     public ModelAndView showCreate(){
@@ -136,10 +143,5 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @GetMapping("/findByFullName")
-    public ModelAndView findByName(@RequestParam String findName) {
-        ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("users", userService.findAllByFullName(findName));
-        return modelAndView;
-    }
+
 }

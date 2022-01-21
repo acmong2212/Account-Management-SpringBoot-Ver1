@@ -81,15 +81,15 @@
                   </table>
                 </div>
 
-<!--                <div class="d-flex justify-content-center">-->
-<!--                  <button th:if="${users.hasPrevious()}">-->
-<!--                    <a class="page-link" th:href="@{/(page=${users.number} - 1)}"><<<<<</a>-->
-<!--                  </button>-->
-<!--                  <b th:text="${users.number} + 1"></b> / <b th:text="${users.totalPages}"></b>-->
-<!--                  <button th:if="${users.hasNext()}">-->
-<!--                    <a class="page-link" th:href="@{/(page=${users.number} + 1)}">>>>>></a>-->
-<!--                  </button>-->
-<!--                </div>-->
+                <div class="d-flex justify-content-center">
+                  <button th:if="${users.hasPrevious()}">
+                    <a class="page-link" th:href="@{/(page=${users.number} - 1)}"><<<<<</a>
+                  </button>
+                  <b th:text="${users.number} + 1"></b> / <b th:text="${users.totalPages}"></b>
+                  <button th:if="${users.hasNext()}">
+                    <a class="page-link" th:href="@{/(page=${users.number} + 1)}">>>>>></a>
+                  </button>
+                </div>
 
               </div>
             </div>

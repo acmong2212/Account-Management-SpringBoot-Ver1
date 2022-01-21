@@ -25,8 +25,8 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public List<User> findAllByFullName(String fullName) {
-        return userRepo.findAllByFullName(fullName);
+    public Page<User> findAllByFullNameContaining(String fullName, Pageable pageable) {
+        return userRepo.findAllByFullNameContaining(fullName, pageable);
     }
 
     @Override

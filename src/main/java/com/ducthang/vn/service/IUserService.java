@@ -9,7 +9,7 @@ import java.util.List;
 public interface IUserService {
     public Page<User> findAllUser(Pageable pageable);
     public List<User> findAllUser();
-    public List<User> findAllByFullName(String fullName);
+    Page<User> findAllByFullNameContaining(String fullName, Pageable pageable);
     public void save(User user);
     public void delete(long id);
     public User findById(long id);
