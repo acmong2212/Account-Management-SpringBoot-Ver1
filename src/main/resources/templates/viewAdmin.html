@@ -50,7 +50,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="u, loop : ${users}">
+                    <tr th:each="u, loop : ${accounts}">
                       <td class="align-middle" th:text="${loop.count}"></td>
                       <td class="align-middle text-center">
                         <a th:text="${u.nameUser}"></a>
@@ -62,7 +62,7 @@
                       <td class="text-nowrap align-middle"><img th:src="${u.avatar}" alt="Not found" width="170" height="220"></span>
                       </td>
                       <td class="text-nowrap align-middle"><span
-                              th:text="${u.role.nameRole}"></span></td>
+                              th:text="${u.getCategories.getNameCategories}"></span></td>
                       <td class="text-center align-middle">
                         <div class="btn-group align-top">
                           <button class="btn btn-sm btn-outline-secondary badge"
@@ -82,12 +82,12 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                  <button th:if="${users.hasPrevious()}">
-                    <a class="page-link" th:href="@{/(page=${users.number} - 1)}"><<<<<</a>
+                  <button th:if="${accounts.hasPrevious()}">
+                    <a class="page-link" th:href="@{/(page=${accounts.number} - 1)}"><<<<<</a>
                   </button>
-                  <b th:text="${users.number} + 1"></b> / <b th:text="${users.totalPages}"></b>
-                  <button th:if="${users.hasNext()}">
-                    <a class="page-link" th:href="@{/(page=${users.number} + 1)}">>>>>></a>
+                  <b th:text="${accounts.number} + 1"></b> / <b th:text="${accounts.totalPages}"></b>
+                  <button th:if="${accounts.hasNext()}">
+                    <a class="page-link" th:href="@{/(page=${accounts.number} + 1)}">>>>>></a>
                   </button>
                 </div>
 

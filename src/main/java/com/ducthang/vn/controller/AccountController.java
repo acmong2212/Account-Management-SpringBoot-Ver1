@@ -1,9 +1,9 @@
 package com.ducthang.vn.controller;
 
-import com.ducthang.vn.model.Role;
-import com.ducthang.vn.model.User;
-import com.ducthang.vn.service.IRoleService;
-import com.ducthang.vn.service.IUserService;
+import com.ducthang.vn.model.Categories;
+import com.ducthang.vn.model.Account;
+import com.ducthang.vn.service.ICategoriesService;
+import com.ducthang.vn.service.IAccountService;
 import com.ducthang.vn.validate.Repeat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,26 +25,40 @@ import java.util.List;
 @Controller
 public class AccountController {
     @Autowired
-    IUserService userService;
+    IAccountService accountService;
 
     @Autowired
-    IRoleService roleService;
+    ICategoriesService categoriesService;
 
     @Autowired
     Repeat repeat;
 
-    @GetMapping("")
-    public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
-        ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("users", userService.findAllUser(PageRequest.of(page, 3)));
-        modelAndView.addObject("roles", roleService.findAllRole());
+//    @GetMapping("")
+//    public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
+//        ModelAndView modelAndView = new ModelAndView("viewAdmin");
+//        modelAndView.addObject("accounts", accountService.findAllAccount(PageRequest.of(page, 3)));
+//        modelAndView.addObject("categories", categoriesService.findAllCategories());
+//        return modelAndView;
+//    }
+
+    @GetMapping("/user")
+    public ModelAndView user() {
+        ModelAndView modelAndView = new ModelAndView("viewUser");
+        return modelAndView;
+    }
+
+    @GetMapping("/admin")
+    public ModelAndView admin(@RequestParam(defaultValue = "0") int page) {
+        ModelAndView modelAndView = new ModelAndView("viewAdmin");
+        modelAndView.addObject("accounts", accountService.findAllAccount(PageRequest.of(page, 3)));
+        modelAndView.addObject("categories", categoriesService.findAllCategories());
         return modelAndView;
     }
 
     @GetMapping("/findByFullName")
     public ModelAndView findByName(@RequestParam String findName, @RequestParam(defaultValue = "0") int page) {
-        ModelAndView modelAndView = new ModelAndView("home");
-        modelAndView.addObject("users", userService.findAllByFullNameContaining(findName, PageRequest.of(page, 3)));
+        ModelAndView modelAndView = new ModelAndView("viewAdmin");
+        modelAndView.addObject("categories", accountService.findAllByFullNameContaining(findName, PageRequest.of(page, 3)));
         return modelAndView;
     }
 
@@ -52,7 +66,7 @@ public class AccountController {
 //    public ModelAndView show() {
 //        ModelAndView modelAndView = new ModelAndView("home");
 //        modelAndView.addObject("users", userService.findAllUser());
-//        modelAndView.addObject("roles", roleService.findAllRole());
+//        modelAndView.addObject("categories", roleService.findAllRole());
 //        return modelAndView;
 //    }
 
@@ -62,33 +76,33 @@ public class AccountController {
         return modelAndView;
     }
 
-    @ModelAttribute("user")
-    public User user(){
-        return new User();
+    @ModelAttribute("account")
+    public Account account(){
+        return new Account();
     }
 
-    @ModelAttribute("roles")
-    public List<Role> roles(){
-        return roleService.findAllRole();
+    @ModelAttribute("categories")
+    public List<Categories> categories(){
+        return categoriesService.findAllCategories();
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute(value = "user") User user, BindingResult bindingResult, @RequestParam long idRole, @RequestParam MultipartFile upImg){
-        repeat.validate(user, bindingResult);
+    public String create(@Valid @ModelAttribute(value = "account") Account account, BindingResult bindingResult, @RequestParam long idCategories, @RequestParam MultipartFile upImg){
+        repeat.validate(account, bindingResult);
 
         if (bindingResult.hasFieldErrors()){
             return "createAccount";
         }
 
-        Role role = new Role();
-        role.setIdRole(idRole);
-        user.setRole(role);
+        Categories categories = new Categories();
+        categories.setIdCategories(idCategories);
+        account.setCategories(categories);
 
         String nameFile = upImg.getOriginalFilename();
         try {
             FileCopyUtils.copy(upImg.getBytes(), new File("D:\\Module 4\\Account-Management-SpringBoot\\src\\main\\resources\\static\\image\\" + nameFile));
-            user.setAvatar("/image/"+nameFile);
-            userService.save(user);
+            account.setAvatar("/image/"+nameFile);
+            accountService.save(account);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,49 +111,49 @@ public class AccountController {
 
     @GetMapping("/delete")
     public String delete(@RequestParam int id) {
-        if (userService.findById(id).getAvatar()!=null){
-            File file = new File("D:\\Module 4\\Account-Management-SpringBoot\\src\\main\\resources\\static\\" +userService.findById(id).getAvatar());
+        if (accountService.findById(id).getAvatar()!=null){
+            File file = new File("D:\\Module 4\\Account-Management-SpringBoot\\src\\main\\resources\\static\\" + accountService.findById(id).getAvatar());
             file.delete();
         }
-        userService.delete(id);
+        accountService.delete(id);
         return "redirect:/";
     }
 
     @GetMapping("/edit")
     public ModelAndView showEdit(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView("/editAccount");
-        modelAndView.addObject("user", userService.findById(id));
-        modelAndView.addObject("roles", roleService.findAllRole());
+        modelAndView.addObject("account", accountService.findById(id));
+        modelAndView.addObject("categories", categoriesService.findAllCategories());
         return modelAndView;
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute(value = "user") User user, BindingResult bindingResult, @RequestParam long idRole , @RequestParam MultipartFile upImg) {
-        repeat.validate(user, bindingResult);
+    public String edit(@Valid @ModelAttribute(value = "account") Account account, BindingResult bindingResult, @RequestParam long idCategories, @RequestParam MultipartFile upImg) {
+        repeat.validate(account, bindingResult);
 
         if (bindingResult.hasFieldErrors()){
             return "editAccount";
         }
 
-        Role role = new Role();
-        role.setIdRole(idRole);
-        user.setRole(role);
+        Categories categories = new Categories();
+        categories.setIdCategories(idCategories);
+        account.setCategories(categories);
 
         if (upImg.getSize() != 0) {
 
-            String deleteImage = "D:\\Module 4\\Account-Management-SpringBoot\\src\\main\\resources\\static\\" + user.getAvatar();
+            String deleteImage = "D:\\Module 4\\Account-Management-SpringBoot\\src\\main\\resources\\static\\" + account.getAvatar();
             File file = new File(deleteImage);
             file.delete();
             try {
                 String imgFile = upImg.getOriginalFilename();
                 FileCopyUtils.copy(upImg.getBytes(), new File("D:\\Module 4\\Account-Management-SpringBoot\\src\\main\\resources\\static\\image\\" + imgFile));
-                user.setAvatar("/image/" + imgFile);
+                account.setAvatar("/image/" + imgFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        userService.save(user);
+        accountService.save(account);
         return "redirect:/";
     }
 

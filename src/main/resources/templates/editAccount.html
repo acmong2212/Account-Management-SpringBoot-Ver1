@@ -15,7 +15,7 @@
 </div>
 <div class="modal-body">
     <div class="py-1">
-        <form class="form" novalidate="" method="post" th:object="${user}" enctype="multipart/form-data">
+        <form class="form" novalidate="" method="post" th:object="${account}" enctype="multipart/form-data">
             <input th:field="*{idUser}" hidden>
             <input th:field="*{avatar}" hidden>
             <div class="row">
@@ -76,9 +76,9 @@
                         <div class="col">
                             <div class="form-group">
                                 <label>Branch:</label>
-                                <select name="idRole">
-                                    <option th:each="r : ${roles}" th:value="${r.idRole}"
-                                            th:text="${r.nameRole}"></option>
+                                <select name="idCategories">
+                                    <option th:each="c : ${categories}" th:value="${c.getIdCategories}"
+                                            th:text="${c.getNameCategories}"></option>
                                 </select>
                             </div>
                         </div>

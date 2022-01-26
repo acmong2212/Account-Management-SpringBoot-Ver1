@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 
 @Entity
 @Data
-public class User {
+public class Account {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idUser;
@@ -37,5 +37,5 @@ public class User {
     private String avatar;
 
     @ManyToOne
-    private Role role;
+    private Categories categories;
 }

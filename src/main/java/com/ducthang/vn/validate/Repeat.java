@@ -1,7 +1,7 @@
 package com.ducthang.vn.validate;
 
-import com.ducthang.vn.model.User;
-import com.ducthang.vn.service.IUserService;
+import com.ducthang.vn.model.Account;
+import com.ducthang.vn.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class Repeat implements Validator {
     @Autowired
-    IUserService userService;
+    IAccountService userService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -21,9 +21,9 @@ public class Repeat implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        User user = (User) target;
-        List<User> userList = userService.findAllUser();
-        for (User u : userList) {
+        Account user = (Account) target;
+        List<Account> userList = userService.findAllAccount();
+        for (Account u : userList) {
             if (u.getNameUser().equals(user.getNameUser()) && user.getIdUser() != u.getIdUser()) {
                 errors.rejectValue("nameUser", "", "Ten^ nay` da~ ton^` tai.");
                 return;
