@@ -10,10 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class AccountController {
     @Autowired
     IAccountService accountService;
@@ -33,13 +31,13 @@ public class AccountController {
     @Autowired
     Repeat repeat;
 
-//    @GetMapping("")
-//    public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
-//        ModelAndView modelAndView = new ModelAndView("viewAdmin");
-//        modelAndView.addObject("accounts", accountService.findAllAccount(PageRequest.of(page, 3)));
-//        modelAndView.addObject("categories", categoriesService.findAllCategories());
-//        return modelAndView;
-//    }
+    @GetMapping("")
+    public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
+        ModelAndView modelAndView = new ModelAndView("viewAdmin");
+        modelAndView.addObject("accounts", accountService.findAllAccount(PageRequest.of(page, 3)));
+        modelAndView.addObject("categories", categoriesService.findAllCategories());
+        return modelAndView;
+    }
 
     @GetMapping("/user")
     public ModelAndView user() {
@@ -106,7 +104,7 @@ public class AccountController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @GetMapping("/delete")
@@ -116,7 +114,7 @@ public class AccountController {
             file.delete();
         }
         accountService.delete(id);
-        return "redirect:/";
+        return "redirect:/admin";
     }
 
     @GetMapping("/edit")
@@ -154,8 +152,6 @@ public class AccountController {
         }
 
         accountService.save(account);
-        return "redirect:/";
+        return "redirect:/admin";
     }
-
-
 }

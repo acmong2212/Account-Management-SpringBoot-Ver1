@@ -2,6 +2,7 @@ package com.ducthang.vn.config;
 
 import com.ducthang.vn.service.IAppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,10 +20,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/").permitAll()
-                .and().authorizeRequests().antMatchers("/user**", "/detail").hasRole("USER")
+                .and().authorizeRequests().antMatchers("/admin/user**").hasRole("USER")
                 .and().authorizeRequests().antMatchers("/admin**").hasRole("ADMIN")
                 .and().formLogin()
-                .and().logout();
+                .and().logout()
+                .and().csrf().disable();
     }
 
     // xác thực
