@@ -1,12 +1,16 @@
 package com.ducthang.vn.controller;
 
+import com.ducthang.vn.model.AppUser;
 import com.ducthang.vn.model.Categories;
 import com.ducthang.vn.model.Account;
+import com.ducthang.vn.model.Role;
+import com.ducthang.vn.service.IAppUserService;
 import com.ducthang.vn.service.ICategoriesService;
 import com.ducthang.vn.service.IAccountService;
 import com.ducthang.vn.validate.Repeat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
@@ -17,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,12 +29,33 @@ import java.util.List;
 public class AccountController {
     @Autowired
     IAccountService accountService;
-
     @Autowired
     ICategoriesService categoriesService;
-
+    @Autowired
+    IAppUserService appUserService;
     @Autowired
     Repeat repeat;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String signIn(@ModelAttribute AppUser appUser){
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+
+        List<Role> roleList = new ArrayList<>();
+        Role role = new Role();
+        role.setIdRole(1L);
+        roleList.add(role);
+        appUser.setRoles(roleList);
+
+        appUserService.save(appUser);
+        return "redirect:/admin";
+    }
 
     @GetMapping("")
     public ModelAndView show(@RequestParam(defaultValue = "0") int page) {
